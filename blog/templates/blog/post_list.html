@@ -1,0 +1,86 @@
+{% extends "blog/base.html" %}
+
+{% load static %}
+{% load bootstrap_pagination %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Blog
+{% endblock %}
+
+{% block header %}
+    <header class="masthead" style="background-image:url('{% static 'img/home-bg.jpg' %}');">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-lg-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>Blog de Mpia</h1>
+                        <span class="subheading">
+                            Ici nous discutons de la programmation informatique
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-lg-8 mx-auto">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="post-preview">
+                            <a href="{% url 'post_detail' slug=post.slug %}">
+                                <h2 class="post-title">{{ post.title }}</h2>
+                                <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+                            </a>
+                            <p class="post-meta">Ecrit par &nbsp;
+                                <a href="mailto:{{ post.author.email }}">{{ post.author.first_name }}</a>,
+                                le {{ post.date }}
+                            </p>
+                        </div>
+                        <hr>
+                    {% endfor %}
+
+                {% else %}
+                {% endif %}
+
+                <div class="clearfix">
+                    {% bootstrap_paginate posts %}
+                </div>
+            </div>
+
+            <div class="col-md-10 col-lg-3 d-none d-lg-block mx-auto" style="margin-top: 30px;">
+                <div class="partieUn">
+                    <div class="card" style="width: 20rem; margin-bottom: 20px">
+                      <div class="card-body">
+                        <h5 class="card-title">ABONNEZ-VOUS MAINTENANT</h5>
+                        <p class="card-text">Abonnez-vous à notre newsletters pour recevoir les mises à jour du blog</p>
+                          <form action="" method="post" novalidate="novalidate">
+                              {% csrf_token %}
+                              {{ form|crispy }}
+                              <a href="#" class="btn btn-primary">S'abonner</a>
+                          </form>
+
+                      </div>
+                    </div>
+                </div>
+
+                <div class="partieDeux">
+                    <div class="card" style="width: 20rem;">
+
+                      <div class="card-body">
+                        <h5 class="card-title">QUI SUIS-JE?</h5>
+                          <img src="{% static 'img/post-bg.jpg' %}" alt="Card image cap" width="100%">
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="{% url 'apropos' %}">Lire encore</a>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
